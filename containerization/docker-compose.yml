@@ -9,6 +9,7 @@ services:
             - 8086:8086
         volumes:
             # - ./influxdb-volume/config:/etc/influxdb/influxdb.conf
+            - ./influxdb-volume/config/:/etc/influxdb/
             - ./influxdb-volume:/var/lib/influxdb
         # environment:
         #     - INFLUXDB_DB=db0
@@ -35,52 +36,57 @@ services:
     #     #   - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
     #     #   - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
 
-    kapacitor:
-        image: kapacitor:latest
-        container_name: kapacitor
-        ports:
-            - 9092:9092
-        volumes:
-            # - ./kapacitor-volume/config/kapacitor.conf:/etc/kapacitor/kapacitor.conf
-            - ./kapacitor-volume:/var/lib/kapacitor
-        depends_on:
-            - influxdb
-        links:
-            - influxdb
-        environment:
-            - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
-        #     - INFLUXDB_URL=http://influxdb:8086
-        #     - VIRTUAL_HOST=${KAPACITOR_HOST}
-        #     - VIRTUAL_PORT=9092
-        #     - LETSENCRYPT_HOST=${KAPACITOR_HOST}
-        #     - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-
-    # telegraf:
-    #     image: telegraf:latest
-    #     container_name: telegraf
-    #     command: -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
-    #     # ports:
-    #     #     -
+    # kapacitor:
+    #     image: kapacitor:latest
+    #     container_name: kapacitor
+    #     ports:
+    #         - 9092:9092
     #     volumes:
-    #         - ./telegraf-volume/config/telegraf.conf:/etc/telegraf/telegraf.conf
-    #         - ./telegraf-volume/config/telegraf.d:/etc/telegraf/telegraf.d
+    #         # - ./kapacitor-volume/config/kapacitor.conf:/etc/kapacitor/kapacitor.conf
+    #         - ./kapacitor-volume:/var/lib/kapacitor
     #     depends_on:
     #         - influxdb
     #     links:
     #         - influxdb
+    #     environment:
+    #         - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
+    #     #     - INFLUXDB_URL=http://influxdb:8086
+    #     #     - VIRTUAL_HOST=${KAPACITOR_HOST}
+    #     #     - VIRTUAL_PORT=9092
+    #     #     - LETSENCRYPT_HOST=${KAPACITOR_HOST}
+    #     #     - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+
+    telegraf:
+        image: telegraf:latest
+        container_name: telegraf
+        # command: -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
+        # ports:
+        #     -
+        volumes:
+            # - ./telegraf-volume/config/telegraf.conf:/etc/telegraf/telegraf.conf
+            # - ./telegraf-volume/config/telegraf.d:/etc/telegraf/telegraf.d
+            - ./telegraf-volume/config:/etc/telegraf
+        depends_on:
+            - influxdb
+            - mosquitto
+        links:
+            - influxdb
 
     mosquitto:
         image: eclipse-mosquitto:latest
         container_name: mosquitto
         ports:
             - 1883:1883
+            - 9001:9001
         volumes:
             # - ./mosquitto-volume/config/mosquitto.conf:/etc/mosquitto/mosquitto.conf
+            - ./mosquitto-volume/config:/etc/mosquitto
             - ./mosquitto-volume:/var/lib/mosquitto
-        depends_on:
-            - influxdb
-        links:
-            - influxdb
+        # depends_on:
+        #     - influxdb
+        # links:
+            # - influxdb
+            # - telegraf
 
     grafana:
         image: grafana/grafana:latest
@@ -88,7 +94,8 @@ services:
         ports:
             - 3000:3000
         volumes:
-            # - ./grafana-volume/config/grafana.conf:/etc/grafana/grafana.conf
+            # - ./grafana-volume/config/grafana.ini:/etc/grafana/grafana.ini
+            - ./grafana-volume/config:/etc/grafana
             - ./grafana-volume:/var/lib/grafana
         depends_on:
             - influxdb
@@ -99,7 +106,7 @@ services:
 volumes:
     influxdb-volume:
     # chronograf-volume:
-    kapacitor-volume:
-    # telegraf-volume:
+    # kapacitor-volume:
+    telegraf-volume:
     mosquitto-volume:
     grafana-volume:
