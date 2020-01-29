@@ -1,0 +1,44 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "API",
+      "description": "API"
+    },
+    "host": "localhost:8085",
+    "basePath": "",
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/testdata/{number}": {
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "description": "N last data",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "summary": "Get N last data",
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "$ref": "#/definitions/Testdata"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
