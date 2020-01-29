@@ -5,12 +5,13 @@ services:
         image: influxdb:latest
         container_name: influxdb
         ports:
-            - 8083:8083
             - 8086:8086
         volumes:
-            # - ./influxdb-volume/config:/etc/influxdb/influxdb.conf
-            - ./influxdb-volume/config/:/etc/influxdb/
+            - ./influxdb-volume/config/influxdb.conf:/etc/influxdb/influxdb.conf
+            - ./influxdb-volume/config/:/etc/influxdb
             - ./influxdb-volume:/var/lib/influxdb
+            - ./influxdb-volume/ssl/influxdb-selfsigned.crt:/etc/ssl/influxdb-selfsigned.crt
+            - ./influxdb-volume/ssl/influxdb-selfsigned.key:/etc/ssl/influxdb-selfsigned.key
         # environment:
         #     - INFLUXDB_DB=db0
         #     - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
@@ -79,9 +80,10 @@ services:
             - 1883:1883
             - 9001:9001
         volumes:
-            # - ./mosquitto-volume/config/mosquitto.conf:/etc/mosquitto/mosquitto.conf
-            - ./mosquitto-volume/config:/etc/mosquitto
+            # - ./mosquitto-volume/config/conf.d:/etc/mosquitto/conf.d
+            # - ./mosquitto-volume/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
             - ./mosquitto-volume:/var/lib/mosquitto
+            # - ./mosquitto-volume:/var/log/mosquitto
         # depends_on:
         #     - influxdb
         # links:
