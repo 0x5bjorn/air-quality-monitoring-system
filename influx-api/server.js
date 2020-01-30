@@ -1,11 +1,10 @@
 'use strict';
 
-// var fs = require('fs');
-// var http = require('http');
-// var https = require('https');
-// var privateKey  = fs.readFileSync('../containerization/influxdb-volume/ssl/influxdb-selfsigned.key', 'utf8');
-// var certificate = fs.readFileSync('../containerization/influxdb-volume/ssl/influxdb-selfsigned.crt', 'utf8');
-// var credentials = {key: privateKey, cert: certificate};
+var fs = require('fs');
+var https = require('https');
+var privateKey  = fs.readFileSync('/etc/ssl/influxdb-selfsigned.key', 'utf8');
+var certificate = fs.readFileSync('/etc/ssl/influxdb-selfsigned.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 
 var express = require('express'),
   router = express.Router(),
@@ -14,7 +13,8 @@ var express = require('express'),
   swaggerDocument = require('./swagger.json');
 
 var Influx = require('influxdb-nodejs');
-var client = new Influx('http://admin:password@192.168.0.111:8086/test');
+                              //admin:password@IP:port/database
+var client = new Influx('http://admin:password@localhost:8086/test');
 // client.schema('test_msrt', {
 //   time: 'string',
 //   device: 'string',
@@ -45,8 +45,8 @@ app.get('/testdata/:number', (req, res) => {
   })
 });
 
-// var httpsServer = https.createServer(credentials, app);
-var server = app.listen('8085', function() {
+var httpsServer = https.createServer(credentials, app);
+var server = httpsServer.listen('8085', function() {
   console.log('Express server listening on port ' + '8085');
 });
-module.exports = app;
+module.exports = httpsServer;

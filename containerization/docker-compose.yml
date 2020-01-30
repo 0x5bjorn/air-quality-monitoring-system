@@ -57,58 +57,69 @@ services:
     #     #     - LETSENCRYPT_HOST=${KAPACITOR_HOST}
     #     #     - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
 
-    telegraf:
-        image: telegraf:latest
-        container_name: telegraf
-        # command: -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
-        # ports:
-        #     -
-        volumes:
-            # - ./telegraf-volume/config/telegraf.conf:/etc/telegraf/telegraf.conf
-            # - ./telegraf-volume/config/telegraf.d:/etc/telegraf/telegraf.d
-            - ./telegraf-volume/config:/etc/telegraf
-        depends_on:
-            - influxdb
-            - mosquitto
-        links:
-            - influxdb
+    # telegraf:
+    #     image: telegraf:latest
+    #     container_name: telegraf
+    #     # command: -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
+    #     # ports:
+    #     #     -
+    #     volumes:
+    #         # - ./telegraf-volume/config/telegraf.conf:/etc/telegraf/telegraf.conf
+    #         # - ./telegraf-volume/config/telegraf.d:/etc/telegraf/telegraf.d
+    #         - ./telegraf-volume/config:/etc/telegraf
+    #     depends_on:
+    #         - influxdb
+    #         - mosquitto
+    #     links:
+    #         - influxdb
 
-    mosquitto:
-        image: eclipse-mosquitto:latest
-        container_name: mosquitto
-        ports:
-            - 1883:1883
-            - 9001:9001
-        volumes:
-            # - ./mosquitto-volume/config/conf.d:/etc/mosquitto/conf.d
-            # - ./mosquitto-volume/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
-            - ./mosquitto-volume:/var/lib/mosquitto
-            # - ./mosquitto-volume:/var/log/mosquitto
-        # depends_on:
-        #     - influxdb
-        # links:
-            # - influxdb
-            # - telegraf
+    # mosquitto:
+    #     image: eclipse-mosquitto:latest
+    #     container_name: mosquitto
+    #     ports:
+    #         - 1883:1883
+    #         - 9001:9001
+    #     volumes:
+    #         # - ./mosquitto-volume/config/conf.d:/etc/mosquitto/conf.d
+    #         # - ./mosquitto-volume/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    #         - ./mosquitto-volume:/var/lib/mosquitto
+    #         # - ./mosquitto-volume:/var/log/mosquitto
+    #     # depends_on:
+    #     #     - influxdb
+    #     # links:
+    #         # - influxdb
+    #         # - telegraf
 
-    grafana:
-        image: grafana/grafana:latest
-        container_name: grafana
-        ports:
-            - 3000:3000
-        volumes:
-            # - ./grafana-volume/config/grafana.ini:/etc/grafana/grafana.ini
-            - ./grafana-volume/config:/etc/grafana
-            - ./grafana-volume:/var/lib/grafana
-        depends_on:
-            - influxdb
-        # environment:
-        #     - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
-        #     - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    # grafana:
+    #     image: grafana/grafana:latest
+    #     container_name: grafana
+    #     ports:
+    #         - 3000:3000
+    #     volumes:
+    #         # - ./grafana-volume/config/grafana.ini:/etc/grafana/grafana.ini
+    #         - ./grafana-volume/config:/etc/grafana
+    #         - ./grafana-volume:/var/lib/grafana
+    #     depends_on:
+    #         - influxdb
+    #     # environment:
+    #     #     - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+    #     #     - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
 
+    # api:
+    #     image: tyto/influx-api:latest
+    #     container_name: influx-api
+    #     build: .
+    #     ports:
+    #         - 8085:8085
+    #     volumes:
+    #         - ./api-volume/ssl:/etc/ssl
+    #     depends_on:
+    #         - influxdb
 volumes:
     influxdb-volume:
     # chronograf-volume:
     # kapacitor-volume:
-    telegraf-volume:
-    mosquitto-volume:
-    grafana-volume:
+    # telegraf-volume:
+    # mosquitto-volume:
+    # grafana-volume:
+    # api-volume:
