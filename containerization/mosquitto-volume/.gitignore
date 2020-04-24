@@ -1,1 +1,2 @@
-!./config/*
+mosquitto.log
+config/user.txt

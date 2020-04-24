@@ -1,1 +1,4 @@
-!./config/*
+data/
+meta/
+ssl/
+wal/
