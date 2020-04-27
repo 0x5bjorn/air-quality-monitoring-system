@@ -15,8 +15,8 @@
 Scheduler userScheduler; // to control your personal task
 namedMesh mesh;
 
-String src_mac = NODE_LIST[1].c_str();
-String dst_mac = NODE_LIST[0].c_str();
+String src_mac = NODE_LIST[1].c_str();   // set node's source mac addr      based on gen_info.h
+String dst_mac = NODE_LIST[0].c_str();   // set node's destination mac addr based on gen_info.h
 
 /***************** FUNCTIONS *****************/
 /*
@@ -25,9 +25,9 @@ String dst_mac = NODE_LIST[0].c_str();
  */
 float readSensorData() {
   
-  // ! ! ! Read data from the sensor modules TBD ! ! !
+  // ! ! ! Read data from the sensor modules TBA ! ! !
 
-  return 143.5;
+  return 86.8;
 }
 
 /*
@@ -38,7 +38,7 @@ void gotoSleep() {
   ESP.deepSleep(SLEEP_SECS*1000000, WAKE_NO_RFCAL);
 }
 
-Task taskSendMessage( TASK_SECOND*5, TASK_FOREVER, []() {
+Task taskSendMessage( TASK_SECOND*10, TASK_FOREVER, []() {
   String msg = src_mac + "|" + readSensorData();
   Serial.print("! ! ! Sending message: ");
   Serial.println("from = " + src_mac + ", payload = " + msg);
