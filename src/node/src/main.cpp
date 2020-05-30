@@ -15,8 +15,8 @@
 Scheduler userScheduler; // to control your personal task
 namedMesh mesh;
 
-String src_mac = NODE_LIST[1].c_str();   // set node's source mac addr      based on gen_info.h
-String dst_mac = NODE_LIST[0].c_str();   // set node's destination mac addr based on gen_info.h
+String src_mac = NODE_LIST[6].c_str();   // set node's source mac addr      based on gen_info.h
+String dst_mac = NODE_LIST[4].c_str();   // set node's destination mac addr based on gen_info.h
 
 /***************** FUNCTIONS *****************/
 /*
@@ -27,7 +27,8 @@ float readSensorData() {
   
   // ! ! ! Read data from the sensor modules TBA ! ! !
 
-  return 86.8;
+  // return analogRead(A0)/60.0;
+  return random(100, 400)/10.0;
 }
 
 /*
@@ -40,12 +41,13 @@ void gotoSleep() {
 
 Task taskSendMessage( TASK_SECOND*10, TASK_FOREVER, []() {
   String msg = src_mac + "|" + readSensorData();
-  Serial.print("! ! ! Sending message: ");
-  Serial.println("from = " + src_mac + ", payload = " + msg);
+  digitalWrite(16, LOW);
+  Serial.print("! ! ! Sending data: ");
+  Serial.println("destination = " + dst_mac + ", source = " + src_mac + ", data = " + msg);
   Serial.print("Status of transmission: ");
   Serial.println(mesh.sendSingle(dst_mac, msg));
   Serial.println("");
-
+  digitalWrite(16, HIGH);
   // gotoSleep();
 });
 
@@ -68,13 +70,16 @@ void initMeshNet() {
 //    Serial.println(mesh.sendSingle(dst_nodeName, msg));
 //  });
   mesh.onReceive([](String &from, String &msg) {
-    Serial.printf("Received message by name from: %s, %s\n", from.c_str(), msg.c_str());
+    digitalWrite(2, LOW);
+    Serial.printf("Received message from: %s, data: %s\n", from.c_str(), msg.c_str());
     
     Serial.print("- - - REsending message: ");
-    Serial.println("from = " + from + ", payload = " + msg);
+    Serial.println("destination = " + dst_mac + ", source = " + src_mac + ", data = " + msg);
     Serial.print("Status of REtransmission: ");
     Serial.println(mesh.sendSingle(dst_mac, msg));
     Serial.println("");
+
+    digitalWrite(2, HIGH);
   });
   
   mesh.onNewConnection([](uint32_t nodeId) {
@@ -115,6 +120,11 @@ void setup() {
   Serial.begin(115200);
 
   initMeshNet();
+
+  pinMode(2, OUTPUT);
+  pinMode(16, OUTPUT);
+  digitalWrite(2, HIGH);
+  digitalWrite(16, HIGH);
 }
 
 void loop() {
