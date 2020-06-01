@@ -25,13 +25,13 @@ String src_mac = NODE_LIST[0].c_str();
 #define MQTT_QOS            0
 #define MQTT_RETAIN         true
 
-const char *MQTT_SERVER    = "192.168.0.112";
+const char *MQTT_SERVER    = "";
 const char *MQTT_USER      = "";      // NULL for no authentication
 const char *MQTT_PASSWORD  = "";      // NULL for no authentication
 
 /* - - - WiFi variables - - - */
-const char *WIFI_SSID      = "TP-LINK_B03C";
-const char *WIFI_PASSWORD  = "005771swGaZ";
+const char *WIFI_SSID      = "";
+const char *WIFI_PASSWORD  = "";
 
 /* Creates a partially initialised client instance */
 WiFiClient wifiClient;
